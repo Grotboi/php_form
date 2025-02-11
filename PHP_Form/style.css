@@ -1,0 +1,11 @@
+#form-messages {
+    margin-bottom: 20px;
+}
+
+.success {
+    color: green;
+}
+
+.error {
+    color: red;
+}

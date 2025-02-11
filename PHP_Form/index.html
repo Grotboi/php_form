@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Форма заявки</title>
+    <script>
+        
+        function applyPhoneMask(event) {
+            var phoneInput = event.target;
+            var value = phoneInput.value.replace(/\D/g, ''); 
+            var formattedValue = '';
+
+            
+            if (value.length > 0) {
+                formattedValue += '+7 (';
+                if (value.length > 1) {
+                    formattedValue += value.substring(1, 4);
+                }
+                if (value.length > 4) {
+                    formattedValue += ') ' + value.substring(4, 7);
+                }
+                if (value.length > 7) {
+                    formattedValue += '-' + value.substring(7, 9);
+                }
+                if (value.length > 9) {
+                    formattedValue += '-' + value.substring(9, 11);
+                }
+            }
+
+            // отформатированное значение
+            phoneInput.value = formattedValue;
+
+            // курсор в конец
+            phoneInput.setSelectionRange(formattedValue.length, formattedValue.length);
+        }
+
+        function submitForm() {
+            var name = document.getElementById('name').value;
+            var email = document.getElementById('email').value;
+            var phone = document.getElementById('phone').value.replace(/\D/g, ''); 
+
+            // Валидация на клиенте
+            if (!email.includes('@')) {
+                alert('Пожалуйста, введите корректный email.');
+                return;
+            }
+            if (phone.length < 10) {
+                alert('Пожалуйста, введите корректный номер телефона.');
+                return;
+            }
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "submit.php", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var response = xhr.responseText;
+                    if (response === "success") {
+                        document.getElementById('form').style.display = 'none';
+                        alert('Заявка успешно отправлена!');
+                    } else {
+                        alert('Ошибка: ' + response);
+                    }
+                }
+            };
+
+            xhr.send("name=" + encodeURIComponent(name) + "&email=" + encodeURIComponent(email) + "&phone=" + encodeURIComponent(phone));
+        }
+
+        function submitForm() {
+    var name = document.getElementById('name').value;
+    var email = document.getElementById('email').value;
+    var phone = document.getElementById('phone').value.replace(/\D/g, ''); 
+
+    // Валидация на клиенте
+    if (!email.includes('@')) {
+        alert('Пожалуйста, введите корректный email.');
+        return;
+    }
+    if (phone.length < 10) { 
+        alert('Пожалуйста, введите корректный номер телефона.');
+        return;
+    }
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "submit.php", true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            var response = xhr.responseText;
+            if (response === "success") {
+                document.getElementById('form').style.display = 'none';
+                alert('Заявка успешно отправлена!');
+            } else {
+                alert('Ошибка: ' + response);
+            }
+        }
+    };
+
+    xhr.send("name=" + encodeURIComponent(name) + "&email=" + encodeURIComponent(email) + "&phone=" + encodeURIComponent(phone));
+}
+    </script>
+</head>
+
+
+
+<body>
+    <form id="form" onsubmit="event.preventDefault(); submitForm();">
+        <input type="text" id="name" name="name" placeholder="Имя" required>
+        <input type="email" id="email" name="email" placeholder="Email" required>
+        <input type="text" id="phone" name="phone" placeholder="+7 (___) ___-__-__" oninput="applyPhoneMask(event)" required>
+        <button type="submit">Отправить</button>
+    </form>
+</body>
+</html>
